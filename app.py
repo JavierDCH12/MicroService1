@@ -44,10 +44,29 @@ def register():
 #LOGIN
 @app.route('/login', methods=['POST'])
 def login():
-    data=request.json
     
+    data=request.get_json()
+    
+    user_schema=UserSchema()
+    
+    try:
+        
+        user_schema.load(data)
+    
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+
     username = data.get['username']
-    passwd = data.get['password']
+    password = data.get['password']
+    
+    user = User.query.filter_by(username=username).first()
+    
+    if user and check_password_hash(user.password, password):
+        return jsonify({'message': f'User {username} logged successfully! '})
+    else:
+        return jsonify({'message':'Invalid username or password'}), 401
+    
+    
     
     return jsonify({'message' : f'User {username} logged in successfully! '}), 200 #SUCCESS CODE
 
