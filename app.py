@@ -21,12 +21,22 @@ def register():
     try:
         
         user_schema.load(data)
+        
     except ValidationError as e:
-        return jsonify(e.messages), 400
+        return jsonify(e.messages), 400 #BadRequest and Error messages printed
         
         
-    username = data.get('username')
-    passwd = data.get('password')
+    username = data.get['username']
+    passwd = data.get['password']
+    
+    if User.query.filter_by(username=username).first():
+        return jsonify({'message': f'User {username} already exists. '}), 400
+
+    hashed_password = generate_password_hash(passwd, method='sha256')
+    new_user=User(username, hashed_password)
+    database.session.add(new_user)
+    database.commit()
+    
     
     return jsonify({'message':f'User {username} registered in successfully! '}), 201 #CREATED CODE 
 
@@ -36,8 +46,8 @@ def register():
 def login():
     data=request.json
     
-    username=data.get('username')
-    passwd=data.get('password')
+    username = data.get['username']
+    passwd = data.get['password']
     
     return jsonify({'message' : f'User {username} logged in successfully! '}), 200 #SUCCESS CODE
 
