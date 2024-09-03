@@ -77,13 +77,12 @@ def login():
     user = User.query.filter_by(username=username).first()
     
     if user and check_password_hash(user.password, password):
-        return jsonify({'message': f'User {username} logged successfully! '})
+        return jsonify({'message': f'User {username} logged successfully! '}), 200 #SUCCESS CODE
     else:
         return jsonify({'message':'Invalid username or password'}), 401
     
     
     
-    return jsonify({'message' : f'User {username} logged in successfully! '}), 200 #SUCCESS CODE
 
 
 

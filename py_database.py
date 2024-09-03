@@ -1,7 +1,4 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields
 from app import database as db
 
 class User(db.Model): #CREATE USER TABLE
